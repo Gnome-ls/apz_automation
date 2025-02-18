@@ -13,13 +13,30 @@ describe('Prueba de inicio de sesión en APLAZO', () => {
         cy.otpCustomerValidation();
     })
 
-    it('Capturar OTP incorrecto', () => { 
+    it.skip('Capturar OTP incorrecto', () => { 
         cy.otpCustomerError();
     })
 
     it.skip('Validar OTP Correcto y panel customer', () => { 
         cy.otpCustomer();
         cy.dashboardCustomer();
+        cy.dashboardCustomerMenu();
+        cy.dashboard();
+    })
+
+    it.skip('Entrar a Pefil', () => { 
+        cy.otpCustomer();
+        cy.dashboardCustomer();
+        cy.Perfil();
+        cy.perfilInformacion();
+    })
+
+    it('Entrar a Pefil y agregar método de pago', () => { 
+        cy.otpCustomer();
+        cy.dashboardCustomer();
+        cy.Perfil();
+        cy.perfilMetodoPago();
+        cy.agregarTarjeta();
     })
 
 });

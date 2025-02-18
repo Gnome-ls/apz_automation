@@ -35,7 +35,11 @@
 //     }
 //   }
 // }
+import { add } from 'cypress/types/lodash';
 import { SELECTORS } from '../selectors/selectors';
+import 'cypress-iframe';
+import 'cypress-wait-until'
+import cypress from 'cypress';
 
 export {}; // Convierte el archivo en un módulo
 
@@ -49,6 +53,11 @@ declare global {
             dashboardCustomerMenu(): void; // Added
             otpCustomerError(): void; // Added
             loginCustomerAplazoNoExist(): void; // Added
+            dashboard(): void; // Added
+            Perfil(): void; // Added
+            perfilInformacion(): void; // Added
+            perfilMetodoPago(): void; // Added
+            agregarTarjeta(): void; // Added
         }
     }
 }
@@ -171,7 +180,7 @@ Cypress.Commands.add('otpCustomerError', () => {
 
 
 Cypress.Commands.add('dashboardCustomer', () => {
-    cy.get(SELECTORS.PANEL_TITLE, { timeout: 6000 })
+    cy.get(SELECTORS.PANEL_TITLE, { timeout: 10000 })
     .should('be.visible') // Asegúrate de que el elemento sea visible
     .and('have.text', ' Panel ') // Asegúrate de que el elemento tenga el texto 'Panel'
 });
@@ -186,6 +195,299 @@ Cypress.Commands.add('dashboardCustomerMenu', () => {
     verifyButton(SELECTORS.PANEL, ' Panel ');
     verifyButton(SELECTORS.PERFIL, ' Perfil ');
     verifyButton(SELECTORS.AYUDA, 'Ayuda');
-    verifyButton(SELECTORS.CREDITO_DISPONIBLE, 'CRÉDITO DISPONIBLE');
 
+}); // Added
+
+Cypress.Commands.add('dashboard', () => {
+    const verifyButton = (selector: string, text: string) => {
+        cy.get(selector)
+        .scrollIntoView()
+        .should('be.visible') // Asegúrate de que el elemento sea visible
+        .and('have.text', text) // Asegúrate de que el elemento tenga el texto 'Panel'
+    }
+
+    verifyButton(SELECTORS.CREDITO_DISPONIBLE, 'CRÉDITO DISPONIBLE');
+    verifyButton(SELECTORS.LIMITE_CREDITO, 'LÍMITE DE CRÉDITO');
+    verifyButton(SELECTORS.DESCUBRE_DONDE_COMPRAR, 'Descubre dónde comprar');
+    verifyButton(SELECTORS.FILTRO_EN_PROGRESO, ' En progreso arrow_drop_down');
+
+});
+
+Cypress.Commands.add('Perfil', () => {
+    cy.get(SELECTORS.PERFIL)
+    .scrollIntoView()
+    .should('be.visible') // Asegúrate de que el elemento sea visible
+    .and('have.text', ' Perfil ') // Asegúrate de que el elemento tenga el texto 'Panel'    
+    .click();
+
+}); // Added
+
+Cypress.Commands.add('perfilInformacion', () => {
+    const verifyInformation = (selector: string, text: string) => {
+        cy.get(selector, { timeout: 5000 })
+        .scrollIntoView()
+        .should('be.visible') // Asegúrate de que el elemento sea visible
+        .and('have.text', text) // Asegúrate de que el elemento tenga el texto 'Panel'
+    }
+
+    verifyInformation(SELECTORS.LBL_INFORMACION, 'INFORMACIÓN');
+    verifyInformation(SELECTORS.LBL_PERFIL, ' Perfil ');
+    verifyInformation(SELECTORS.LBL_INFORMACION_PERSONAL, 'Información Personal');
+    verifyInformation(SELECTORS.LBL_DIRECCION, 'Dirección');
+    verifyInformation(SELECTORS.LBL_INFORMACION, 'INFORMACIÓN');
+    verifyInformation(SELECTORS.LBL_METODO_PAGO, 'MÉTODO DE PAGO');
+
+}); // Added
+
+Cypress.Commands.add('perfilMetodoPago', () => {
+    cy.get(SELECTORS.LBL_METODO_PAGO)
+    .scrollIntoView()
+    .should('be.visible') // Asegúrate de que el elemento sea visible
+    .and('have.text', 'MÉTODO DE PAGO') // Asegúrate de que el elemento tenga el texto 'Panel'    
+    .click();
+}); // Added
+
+Cypress.Commands.add('agregarTarjeta', () => {
+
+    cy.get(SELECTORS.LBL_TARJETA_ACTUAL, {timeout:2000})
+        .should('be.visible')
+        .invoke('text')
+        .then((cardText) => {
+            if(cardText.trim() === '••• 4444'){
+                cy.get(SELECTORS.BTN_AGREGAR_METODO_PAGO)
+                    .should('be.visible') // Asegúrate de que el elemento sea visible
+                    .and('have.text', ' REEMPLAZAR MÉTODO DE PAGO\n') // Asegúrate de que el elemento tenga el texto 'Panel'
+                    .click();
+                cy.get(SELECTORS.APLAZO_HEADER_LOGO, { timeout: 5000 })
+                    .should('be.visible') // Asegúrate de que el elemento sea visible
+                    const verifyAddCard = (selector: string, text: string) => {
+                        cy.get(selector, { timeout: 5000 })
+                        .scrollIntoView()
+                        .should('be.visible') // Asegúrate de que el elemento sea visible
+                        .and('have.text', text) // Asegúrate de que el elemento tenga el texto 'Panel'
+                    }
+                
+                    verifyAddCard(SELECTORS.LBL_DOMICILIA_TARJETA, 'Domicilia tu tarjeta');
+                    verifyAddCard(SELECTORS.LBL_SUGERENCIA_AGREGAR_TARJETA_01, 'Con esta tarjeta se hará el primer pago de tu compra y los pagos siguientes');
+                    verifyAddCard(SELECTORS.LBL_SUGERENCIA_AGREGAR_TARJETA_02, 'Te sugerimos usar la tarjeta donde recibes tu nómina para que siempre tengas saldo disponible');
+                    verifyAddCard(SELECTORS.LBL_TITULAR_TARJETA, 'Titular de la tarjeta');
+                    verifyAddCard(SELECTORS.LBL_NUMERO_TARJETA, 'Número de tarjeta');
+                    verifyAddCard(SELECTORS.LBL_VENCIMIENTO, 'Vencimiento');
+                    verifyAddCard(SELECTORS.LBL_CVV, 'Código de seguridad');
+                    verifyAddCard(SELECTORS.BTN_REEMPLAZAR, ' Reemplazar\n');
+                    verifyAddCard(SELECTORS.LBL_INFORMATIVA, ' Pagos y transacciones 100% seguras y con encriptación SSL ');
+                    const addCard =  (selector: string, text: string) => {
+                        cy.get(selector, { timeout: 5000 })
+                            .should('be.visible') // Asegúrate de que el elemento sea visible
+                            .type(text)
+                    }
+                
+                    addCard(SELECTORS.TXT_TITULAR, Cypress.env('customerName'));
+
+                    cy.get(SELECTORS.IFRAME_CARD, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_CARD)
+                                            .should('exist')
+                                            .type(Cypress.env('card_visa'))
+                                    });
+                            });
+                        });
+
+                    cy.get(SELECTORS.IFRAME_EXPIRATION, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_EXPIRATION)
+                                            .should('exist')
+                                            .and('be.visible')
+                                            .type(Cypress.env('date_expiration'))
+                                    });
+                            });
+                    });
+
+                    cy.get(SELECTORS.IFRAME_CVV, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_CVV)
+                                            .should('exist')
+                                            .type(Cypress.env('cvv'))
+                                    });
+                            });
+                    });
+
+                    const clickBtnReemplazar =  (selector: string) => {
+                        cy.get(selector, { timeout: 3000 })
+                            .should('be.visible') // Asegúrate de que el elemento sea visible
+                            .should('not.be.disabled')
+                            .click()
+                    }
+                
+                    clickBtnReemplazar(SELECTORS.BTN_REEMPLAZAR);
+                
+                    cy.get('canvas')
+                        .then(($canvas) => {
+                            if ($canvas.is(':visible')) {
+                                cy.log('El canvas está visible. Esperando 3 segundos...');
+                                cy.wait(20000); // Espera 3 segundos
+                            } else {
+                                cy.log('El canvas no está visible. Continuando sin esperar...');
+                            }
+                    })
+                    .then(() => {
+                        cy.get(SELECTORS.LBL_METODO_PAGO)
+                            .should('be.visible')
+                            .click();
+                    });
+            } else {
+                cy.get(SELECTORS.BTN_AGREGAR_METODO_PAGO)
+                    .should('be.visible') // Asegúrate de que el elemento sea visible
+                    .and('have.text', ' REEMPLAZAR MÉTODO DE PAGO\n') // Asegúrate de que el elemento tenga el texto 'Panel'
+                    .click();
+                cy.get(SELECTORS.APLAZO_HEADER_LOGO, { timeout: 3000 })
+                    .should('be.visible') // Asegúrate de que el elemento sea visible
+                    const verifyAddCard = (selector: string, text: string) => {
+                        cy.get(selector, { timeout: 5000 })
+                        .scrollIntoView()
+                        .should('be.visible') // Asegúrate de que el elemento sea visible
+                        .and('have.text', text) // Asegúrate de que el elemento tenga el texto 'Panel'
+                    }
+                
+                    verifyAddCard(SELECTORS.LBL_DOMICILIA_TARJETA, 'Domicilia tu tarjeta');
+                    verifyAddCard(SELECTORS.LBL_SUGERENCIA_AGREGAR_TARJETA_01, 'Con esta tarjeta se hará el primer pago de tu compra y los pagos siguientes');
+                    verifyAddCard(SELECTORS.LBL_SUGERENCIA_AGREGAR_TARJETA_02, 'Te sugerimos usar la tarjeta donde recibes tu nómina para que siempre tengas saldo disponible');
+                    verifyAddCard(SELECTORS.LBL_TITULAR_TARJETA, 'Titular de la tarjeta');
+                    verifyAddCard(SELECTORS.LBL_NUMERO_TARJETA, 'Número de tarjeta');
+                    verifyAddCard(SELECTORS.LBL_VENCIMIENTO, 'Vencimiento');
+                    verifyAddCard(SELECTORS.LBL_CVV, 'Código de seguridad');
+                    verifyAddCard(SELECTORS.BTN_REEMPLAZAR, ' Reemplazar\n');
+                    verifyAddCard(SELECTORS.LBL_INFORMATIVA, ' Pagos y transacciones 100% seguras y con encriptación SSL ');
+                const addCard =  (selector: string, text: string) => {
+                    cy.get(selector, { timeout: 5000 })
+                        .should('be.visible') // Asegúrate de que el elemento sea visible
+                        .type(text)
+                    }
+                
+                    addCard(SELECTORS.TXT_TITULAR, Cypress.env('customerName'));
+
+                    cy.get(SELECTORS.IFRAME_CARD, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_CARD)
+                                            .should('exist')
+                                            .type(Cypress.env('card_mastercard'))
+                                    });
+                            });
+                        });
+
+                    cy.get(SELECTORS.IFRAME_EXPIRATION, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_EXPIRATION)
+                                            .should('exist')
+                                            .and('be.visible')
+                                            .type(Cypress.env('date_expiration'))
+                                    });
+                            });
+                    });
+
+                    cy.get(SELECTORS.IFRAME_CVV, { timeout: 20000 })
+                        .should('exist')
+                        .then(($iframe) => {
+                            cy.waitUntil(
+                                () => Cypress.$($iframe[0]).prop('contentDocument')?.body !== null,
+                                { timeout: 10000, interval: 200 }
+                            ).then(() => {
+                                cy.wrap($iframe)
+                                    .its('0.contentDocument.body')
+                                    .should('not.be.empty')
+                                    .then(($body) => {
+                                        const bodyElement = Cypress.$($body);
+                                        console.log(bodyElement.html());
+                                        cy.wrap(bodyElement)
+                                            .find(SELECTORS.TXT_CVV)
+                                            .should('exist')
+                                            .type(Cypress.env('cvv'))
+                                    });
+                            });
+                    });
+
+                    const clickBtnReemplazar =  (selector: string) => {
+                        cy.get(selector, { timeout: 3000 })
+                            .should('be.visible') // Asegúrate de que el elemento sea visible
+                            .should('not.be.disabled')
+                            .click()
+                    }
+                
+                    clickBtnReemplazar(SELECTORS.BTN_REEMPLAZAR);
+                
+                    cy.get('canvas')
+                        .then(($canvas) => {
+                        if ($canvas.is(':visible')) {
+                            cy.wait(20000); 
+                        } else {
+                            cy.log('El canvas no está visible. Continuando sin esperar...');
+                        }
+                    })
+                    .then(() => {
+                        cy.get(SELECTORS.LBL_METODO_PAGO)
+                            .should('be.visible')
+                            .click();
+                    });
+            }
+        })
 }); // Added

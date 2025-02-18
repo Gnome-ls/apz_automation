@@ -4,6 +4,7 @@ import { defineConfig } from "cypress";
 
 
 export default defineConfig({
+  chromeWebSecurity: false,
   env: {
     loginAplazoUrl:'https://customer.aplazo.net/login/credentials',
     loginVerifyCode: 'https://customer.aplazo.net/login/verify-code',
